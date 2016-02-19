@@ -1,0 +1,30 @@
+Alpha 2.2
+Fixed errors in minutes generator
+Fixed minor bug resulting in two meeting points numbered 5
+Fixed incorrect display of other people present
+Fixed syntax in board election point
+
+
+Alpha 2.1.1
+Declared array for upload errors properly.
+
+
+Alpha 2.1
+Fixed error where validation of Auditor on incompatible positions resulted in PHP throwing error messages.
+Added logging mechanism for internal testing purposes.
+Added creation of empty index.php in meeting folder to stop ppl from snooping.
+Added possibility to accept American Date formats. Bleh.
+Added some input-related HTML5 to the form.
+
+
+Alpha 2
+Styled pages using Lato
+Included predefined stuff in textboxes all over the place.
+Verification of people not being elected twice to incompatible positions.
+Added about-page, license info and changelog.
+Added Zip-archive for all document files.
+
+
+Alpha 1
+Basic functionality.
+Old Ung Pirat document templates.
