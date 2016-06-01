@@ -1,0 +1,1 @@
+<?php $cfgVar0 = "";$cfgVar1 = "";$cfgVar2 = "";$cfgVar3 = "";$cfgVar4 = "";$cfgVar5 = "";$cfgVar6 = "";?>
