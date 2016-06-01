@@ -1,9 +1,0 @@
-@import url('http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext');
-body, textarea, select, input {
-	font-family: "Lato", "Bitstream Vera Sans", arial, helvetica, sans-serif;
-}
-h1, h2, h3, {
-	font-family: "Lato", "BorisBlackBloxx", arial, helvetica, sans-serif;
-	font-style: normal;
-	font-weight:900;
-}
