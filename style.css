@@ -1,0 +1,96 @@
+#resetButton {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.errorMessage {
+	color:red;
+}
+
+
+html {
+	max-width: 2000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+#input {
+	float: left;
+	width: 48%;
+}
+
+#output {
+	float: left;
+	width: 48%;
+}
+body {
+	font-family: "Open Sans",Arial,Helvetica,sans-serif;
+	padding: 30px;
+	font-size: 12px;
+	padding-left: 90px;
+}
+code {
+	background-color: #ddd;
+	font-weight: initial;
+}
+.shortDescription {
+	font-size: 16px;
+}
+.object {
+	font-weight: bold;
+	font-style: italic
+}
+table {
+	border-collapse: collapse;
+}
+td, th {
+	border: 1px solid #ccc;
+	padding: 6px;
+}
+th {
+	background-color: #ddd;
+}
+h1 {
+	font-size: 40px;
+	margin-bottom: 4px;
+}
+h2 {
+	padding-top: 30px;
+	margin-top: 50px;
+	font-size: 36px;
+	margin-bottom: 4px;
+}
+h3 {
+	border-top: 2px dotted grey;
+	padding-top: 30px;
+	font-size: 30px;
+	margin-bottom: 4px;
+	margin-left: -40px;
+}
+h4 {
+	font-size: 24px;
+	margin-bottom: 4px;
+	margin-left: -30px;
+}
+h5 {
+	font-size: 18px;
+	margin-bottom: 4px;
+	margin-left: -20px;
+}
+
+code.pre {
+	padding: 10px;
+	display: inline-block;
+	white-space: pre;
+	visibility: hidden;
+}
+
+p {
+	margin-top: 12px;
+	margin-bottom: 4px;
+}
+
+.required {
+	color: red;
+}
