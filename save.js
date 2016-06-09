@@ -17,6 +17,18 @@ class Jesus {
 				}
 				HtmlGenerator.generateHtml(json);
 				localStorage.setItem("json", JSON.stringify(json));
+
+				$.ajax({
+					url: "backend/index.php?do=save",
+					contentType: "application/json",
+					method: "POST",
+					data: JSON.stringify(json)
+				}).done(function(data) {
+					console.log(JSON.stringify(data, null, "  "));
+				}).error(function(data) {
+					console.log(JSON.stringify(data.responseJSON, null, "  "));
+			});
+				
 				return true;
 			}
 		}

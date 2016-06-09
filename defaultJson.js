@@ -1,6 +1,7 @@
 window.originalJson = {
 	orgType: 123,
 	orgName: "Ung Pirat Hästpolololololo",
+	meetingTitle: "Ung Pirat Hästpolololololo årsmöte ej hårdkodat 2016",
 	meetingPoints: [
 		{
 			id: "meetingOpens",

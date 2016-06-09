@@ -1,6 +1,7 @@
 <?php
 class Database extends PDO {
 	public function __construct($settings) {
+	
 		parent::__construct(
 			'mysql:host='.$settings->dbhostname.';port='.$settings->dbport.';dbname='.$settings->dbname, 
 			$settings->dbusername, 
