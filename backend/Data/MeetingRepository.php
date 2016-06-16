@@ -56,7 +56,7 @@ class MeetingRepository
 	}
 		
 	public function load($id){
-		if (empty($id) OR $id === 0 OR is_int($id) === false) 
+		if (empty($id) OR $id === 0)// OR is_int($id) === false) 
 		{
 			throw new Exception("invalid argument");
 		} 
