@@ -7,7 +7,7 @@ class LoadAll{
 		$loadedMeetings = array();
 		
 		foreach($meetings as $key => $value){
-			if($value->enabled === 1){
+			if($value->enabled == 1){
 				$meeting = array();
 				$meeting['id'] = $value->id;
 				$meeting['title'] = $value->title;
