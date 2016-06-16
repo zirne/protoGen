@@ -26,6 +26,16 @@ window.originalArsmote = {
 };
 
 
+window.newMeetingPoint = {
+			type: "customQuestion",     // vilken typ av fråga det är
+			datatype: "json",
+			data: {
+				title: "Skriv din titel här",
+				text: "Skriv vad punken handlar om här",
+				beslut: "Vad ni kommer fram till.",
+			}
+		}
+
 window.originalStyrelsemote = {
 	orgType: 123,
 	orgName: "Ung Pirat Hackerspace",

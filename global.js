@@ -1,15 +1,9 @@
 function initMeeting() {
+	// we need our saviour!
+	if(!window.jesus) {
+		window.jesus = new Jesus();
+	}
 	
-	window.jesus = new Jesus();
-
-	$(".validatorField").each(function(data, target) {
-		$(target).on('change keyup', Validator.validate);
-		
-		$(target).on('change keyup', window.jesus.saveToJson);
-	});
-}
-
-function createPanes() {
 	$('body').empty();
 	$('<div>').attr('id', 'input').appendTo($('body'));
 	$('<div>').attr('id', 'output').appendTo($('body'));
@@ -27,7 +21,19 @@ function createPanes() {
 	HtmlGenerator.generateHtml(json);
 	
 	// add event listeners to forms
-	initMeeting();
+	$(".validatorField").each(function(data, target) {
+		$(target).off('change keyup');
+		$(target).on('change keyup', Validator.validate);
+		$(target).on('change keyup', window.jesus.saveToJson);
+	});
+	
+	$('<div>').text("Ny punkt").appendTo('body').on('click', function(ev) {
+		var punkt = jQuery.extend(true, {},window.newMeetingPoint);
+		punkt.id = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 8);
+		json.meetingPoints.push(punkt);
+		initMeeting();
+		window.jesus.saveAll(json);
+	});
 }
 	
 $(document).ready(function() {
@@ -54,9 +60,8 @@ $(document).ready(function() {
 			var id = $(ev.currentTarget).data('id');
 			if(id) {
 				$.post('backend/index.php?do=load', JSON.stringify({ 'id': id })).done(function(data) {
-					console.log(data);
 					window.json = data;
-					createPanes();
+					initMeeting();
 				});
 			} else {
 				var typ = $(ev.currentTarget).data('motestyp');
@@ -70,7 +75,7 @@ $(document).ready(function() {
 				} else {
 					alert("Smurf");
 				}
-				createPanes();
+				initMeeting();
 			}
 		});
 		list.appendTo('body');

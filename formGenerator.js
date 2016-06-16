@@ -12,12 +12,22 @@ class FormGenerator {
 				output = FormGenerator.vb(p);
 			} else if (p.type == "meetingOpen") {
 				output = FormGenerator.meetingOpen(p);
+			} else if (p.type == "customQuestion") {
+				output = FormGenerator.customQuestion(p);
 			} else {
-				console.error("Todo: Write form generator function for " + p.type);
+				console.info("Todo: Write form generator function for " + p.type);
 			}
 			
-			o.append("<p>" + output + "</p>");
+			var a = $("<p>").append(output);
+			o.append(a);
+			
 		}
+		o.sortable({
+			appendTo: o,
+			axis: "y",
+			connectWith: "p",
+			stop: window.jesus.saveOrder
+		});
 	}
 
 	static vb(p) {
@@ -33,4 +43,14 @@ class FormGenerator {
 				+ '<br><span class="errorMessage" id="'+ p.id +'_error"></span></form></div>';
 		return data;
 	}
+	
+
+	static customQuestion(p) {
+		var data = '<div class="meetingPointContainer" id="' + p.id + '" data-type="'+ p.type +'" data-datatype="'+ p.type +'">'
+				+ 'Titel: <input value="'+p.data.title +'" class="validatorField title"><br>'
+				+ 'Text: <input value="'+p.data.text +'" class="validatorField text"><br>'
+				+ 'Beslut: <input type="time" value="'+p.data.beslut +'" class="validatorField beslut"><br>'
+				+ '<br><span class="errorMessage" id="'+ p.id +'_error"></span></form></div>';
+		return data;
+	}	
 }

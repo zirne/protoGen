@@ -24,9 +24,17 @@ class Validator {
 			} else {
 				$(errorFieldName).text("");
 			}			
+		} else if(type == "customQuestion") {
+			var errorMessage = Validator.customQuestion( );
+			var errorFieldName = "#" + $(target).attr("id") + "_error";
+			if(errorMessage) {
+				$(errorFieldName).text(errorMessage);
+			} else {
+				$(errorFieldName).text("");
+			}			
 			
 		} else {
-			console.error("todo: write validation function for " + type);
+			console.info("todo: write validation function for " + type);
 		}
 	}
 
@@ -39,6 +47,12 @@ class Validator {
 		if(time == "") {
 			return "Ni måste öppna nån gång";
 		}
+		
+		return null;
+	}
+	
+	static customQuestion() {
+		console.info("todo custom question validator");
 		
 		return null;
 	}

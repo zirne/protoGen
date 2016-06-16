@@ -14,8 +14,10 @@ class HtmlGenerator {
 				output = HtmlGenerator.vb(p);
 			} else if (p.type == "meetingOpen") {
 				output = HtmlGenerator.meetingOpen(p);
+			} else if (p.type == "customQuestion") {
+				output = HtmlGenerator.customQuestion(p);
 			} else {
-				console.error("Todo: Write html generator function for " + p.type);
+				console.info("Todo: Write html generator function for " + p.type);
 			}
 			
 			o.append("<p>" + output + "</p>");
@@ -28,5 +30,9 @@ class HtmlGenerator {
 
 	static meetingOpen(p) {
 		return '<h2>'+ p.title +'</h2><p>' + p.data.meetingOpener + " öppnade mötet klockan " + p.data.meetingOpenTime + '</p>';
+	}
+	
+	static customQuestion(p) {
+		return '<h2>'+ p.data.title +'</h2><p>' + p.data.text + "<br><br>" + p.data.beslut + '</p>';
 	}
 }
