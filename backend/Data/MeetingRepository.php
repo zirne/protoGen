@@ -30,7 +30,7 @@ class MeetingRepository
 		} 
 		else 
 		{//update existing row
-			if (empty($meeting->id) OR $meeting->id === 0 OR is_int($meeting->id) === false)
+			if (empty($meeting->id) OR $meeting->id === 0)
 			{
 				throw new Exception("id must be an integer");
 			}
@@ -56,7 +56,7 @@ class MeetingRepository
 	}
 		
 	public function load($id){
-		if (empty($id) OR $id === 0)// OR is_int($id) === false) 
+		if (empty($id) OR $id === 0)
 		{
 			throw new Exception("invalid argument");
 		} 
@@ -79,5 +79,18 @@ class MeetingRepository
 				return $stmt->fetch();
 			}
 		}
+	}
+	
+	public function loadAll(){
+		$query = "SELECT * FROM tbl_meeting";
+		$stmt = $this->db->prepare($query);
+		$stmt->execute();
+		
+		if (!$stmt->rowCount())
+			{
+				throw new Exception("Nothing to load!");
+			}
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'Meeting');
+		return $stmt->fetchAll();
 	}
 }

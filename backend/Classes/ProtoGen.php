@@ -14,6 +14,10 @@ class ProtoGen {
 				case 'load':
 					$result = (new Load())->handle($postdata);
 					break;
+					
+				case 'loadAll':
+					$result = (new ReturnOpen())->handle($postdata);
+					break;
 
 				default:
 					# code...
