@@ -5,12 +5,6 @@ function Jesus() {
 	var that = this;
 
 	this.saveToJson = function(event) {
-		
-		if(saveTimeout && htmlTimeout) {
-			return false;
-		}
-
-
 		var target = $(event.currentTarget).parents(".meetingPointContainer").first()
 		var type = $(target).data('type');
 

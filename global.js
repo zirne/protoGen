@@ -10,6 +10,10 @@ function initMeeting() {
 }
 
 function createPanes() {
+	$('body').empty();
+	$('<div>').attr('id', 'input').appendTo($('body'));
+	$('<div>').attr('id', 'output').appendTo($('body'));
+	
 	// create the left pane, ie the form
 	FormGenerator.generateForm(json);
 	
@@ -27,13 +31,48 @@ function createPanes() {
 }
 	
 $(document).ready(function() {
-	window.json = window.originalJson;
-	
-	createPanes();
-	
-	$("#resetButton").on('click', function(e) {
-		e.preventDefault();
-		window.json = window.originalJson;
-		createPanes();
+	$.get('backend/index.php?do=loadAll').done(function(data) {
+		var list = $('<div>');
+		var el = $('<div>').text("Nytt årsmöte");
+		el.data('motestyp', 'arsmote');
+		el.appendTo(list);
+
+		el = $('<div>').text("Nytt styrelsemöte");
+		el.data('motestyp', 'styrelsemote');
+		el.appendTo(list);		
+
+		el = $('<div>').text("Nytt konstituerande styrelsemöte");
+		el.data('motestyp', 'konstituerande_styrelsemote');
+		el.appendTo(list);		
+		
+		for(var i in data) {
+			var el = $('<div>').text(data[i]['title']);
+			el.data('id', data[i]['id']);
+			el.appendTo(list);
+		}
+		list.find('div').on('click', function(ev) {
+			var id = $(ev.currentTarget).data('id');
+			if(id) {
+				$.post('backend/index.php?do=load', JSON.stringify({ 'id': id })).done(function(data) {
+					console.log(data);
+					window.json = data;
+					createPanes();
+				});
+			} else {
+				var typ = $(ev.currentTarget).data('motestyp');
+				
+				if(typ == 'arsmote') {
+					window.json = window.originalArsmote;
+				} else if(typ == 'styrelsemote') {
+					window.json = window.originalStyrelsemote;
+				} else if(typ == 'konstituerande_styrelsemote') {
+					window.json = window.originalKonstituerande;
+				} else {
+					alert("Smurf");
+				}
+				createPanes();
+			}
+		});
+		list.appendTo('body');
 	});
 });
