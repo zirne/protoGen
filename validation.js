@@ -15,11 +15,34 @@ class Validator {
 			} else {
 				$(errorFieldName).text("");
 			}
+			
+		} else if(type == "meetingOpen") {
+			var errorMessage = Validator.meetingOpen($(target).find(".meetingOpener").first().val(), $(target).find(".meetingOpenTime").first().val() );
+			var errorFieldName = "#" + $(target).attr("id") + "_error";
+			if(errorMessage) {
+				$(errorFieldName).text(errorMessage);
+			} else {
+				$(errorFieldName).text("");
+			}			
+			
 		} else {
 			console.error("todo: write validation function for " + type);
 		}
 	}
 
+	static meetingOpen(who, time) {
+		
+		if(who == "") {
+			return "Någon måste öppna";
+		}
+
+		if(time == "") {
+			return "Ni måste öppna nån gång";
+		}
+		
+		return null;
+	}
+	
 	static vb(text) {
 		//if(text.indexOf("ingenting") >= 0) {
 		if(text == "ingenting") {

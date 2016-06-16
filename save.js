@@ -1,6 +1,16 @@
-class Jesus {
+function Jesus() {
+	
+	var saveTimeout = null;
+	var htmlTimeout = null;
+	var that = this;
 
-	static saveToJson(event) {
+	this.saveToJson = function(event) {
+		
+		if(saveTimeout && htmlTimeout) {
+			return false;
+		}
+
+
 		var target = $(event.currentTarget).parents(".meetingPointContainer").first()
 		var type = $(target).data('type');
 
@@ -8,38 +18,54 @@ class Jesus {
 			var p = json.meetingPoints[i];	
 			if(p.id == $(target).attr('id')) {
 				if(type == "vb") {
-					json.meetingPoints[i].data = Jesus.vb(json.meetingPoints[i].data, target);
+					json.meetingPoints[i].data = vb(json.meetingPoints[i].data, target);
 				}else if(type == "meetingOpen") {
-					json.meetingPoints[i].data = Jesus.meetingOpen(json.meetingPoints[i].data, target);
+					json.meetingPoints[i].data = meetingOpen(json.meetingPoints[i].data, target);
 					
 				} else {
 					console.error("Todo: Write save function for " + type);
 				}
-				HtmlGenerator.generateHtml(json);
-				localStorage.setItem("json", JSON.stringify(json));
+				
+				if(!htmlTimeout) {
+					htmlTimeout = setTimeout(function() {
+						HtmlGenerator.generateHtml(json);
+						htmlTimeout = null;
+					}, 200);
+					
+				}
 
-				$.ajax({
-					url: "backend/index.php?do=save",
-					contentType: "application/json",
-					method: "POST",
-					data: JSON.stringify(json)
-				}).done(function(data) {
-					console.log(JSON.stringify(data, null, "  "));
-				}).error(function(data) {
-					console.log(JSON.stringify(data.responseJSON, null, "  "));
-			});
+				
+				if(!saveTimeout) {
+					saveTimeout = setTimeout(function() {
+						$.ajax({
+							url: "backend/index.php?do=save",
+							contentType: "application/json",
+							method: "POST",
+							data: JSON.stringify(json)
+						}).done(function(data) {
+							if(data.error) {
+								alert(data.error);
+							} else {
+								json.meetingID = data.meetingID;
+							}
+						}).error(function(data) {
+							alert("Kunde inte spara");
+						});
+						saveTimeout = null;
+					}, 2000);
+				}
 				
 				return true;
 			}
 		}
 	}
 		
-	static vb(data, target) {
+	var vb = function(data, target) {
 		data.text = $(target).find('textarea').first().val();
 		return data;
 	}
 	
-	static meetingOpen(data, target) {
+	var meetingOpen = function(data, target) {
 		data.meetingOpenTime = $(target).find('input.meetingOpenTime').first().val();
 		data.meetingOpener = $(target).find('input.meetingOpener').first().val();	
 		return data;

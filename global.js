@@ -1,9 +1,11 @@
 function initMeeting() {
+	
+	window.jesus = new Jesus();
 
 	$(".validatorField").each(function(data, target) {
 		$(target).on('change keyup', Validator.validate);
 		
-		$(target).on('change keyup', Jesus.saveToJson);
+		$(target).on('change keyup', window.jesus.saveToJson);
 	});
 }
 
@@ -25,15 +27,7 @@ function createPanes() {
 }
 	
 $(document).ready(function() {
-	//load the meeting data, either from default or storage
 	window.json = window.originalJson;
-	var jsonFromStorage = localStorage.getItem("json");
-	if(jsonFromStorage) {
-		jsonFromStorage = JSON.parse(jsonFromStorage);
-		if(jsonFromStorage) {	
-			window.json = jsonFromStorage;
-		}
-	}
 	
 	createPanes();
 	
