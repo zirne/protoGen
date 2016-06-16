@@ -1,5 +1,5 @@
-<?php //ReturnOpen
-class ReturnOpen{
+<?php //LoadAll
+class LoadAll{
 	public function handle(){
 		$repo = new MeetingRepository();
 		$meetings = $repo->loadAll();
