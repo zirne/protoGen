@@ -7,10 +7,13 @@ class ReturnOpen{
 		$loadedMeetings = array();
 		
 		foreach($meetings as $key => $value){
-			$meeting = array();
-			$meeting['id'] = $value->id;
-			$meeting['title'] = $value->title;
-			$loadedMeetings[] = $meeting;// same as array_push
+			if($value->enabled === 1){
+				$meeting = array();
+				$meeting['id'] = $value->id;
+				$meeting['title'] = $value->title;
+				$meeting['editable'] = $value->editable;
+				$loadedMeetings[] = $meeting;// same as array_push
+			}
 		}
 		
 		return $loadedMeetings;
