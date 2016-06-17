@@ -1,6 +1,6 @@
 class FormGenerator {
 
-	static generateForm(json) {
+	static generateForm(json, jesus) {
 		var o = $("#input");
 		o.empty();
 	
@@ -26,7 +26,9 @@ class FormGenerator {
 			appendTo: o,
 			axis: "y",
 			connectWith: "p",
-			stop: window.jesus.saveOrder
+			stop: function() {
+				jesus.saveOrder(json)
+			}
 		});
 	}
 

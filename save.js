@@ -4,7 +4,7 @@ function Jesus() {
 	var htmlTimeout = null;
 	var that = this;
 	
-	this.saveOrder = function() {
+	this.saveOrder = function(json) {
 		var oldList = json.meetingPoints;
 		json.meetingPoints = [];
 		$("#input p").each(function(id, el) {
@@ -19,7 +19,7 @@ function Jesus() {
 		that.saveAll(json);
 	}
 
-	this.saveToJson = function(event) {
+	this.pointChanged = function(event, json) {
 		var target = $(event.currentTarget).parents(".meetingPointContainer").first();
 		var type = $(target).data('type');
 
