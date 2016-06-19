@@ -1,6 +1,8 @@
-class HtmlGenerator {
+function HtmlGenerator() {
 
-	static generateHtml(json) {
+	this.htmlTimeout = null;
+	
+	this.generateHtml = function(json) {
 		var o = $("#output");
 		o.empty();
 		
@@ -8,31 +10,17 @@ class HtmlGenerator {
 		
 		for(var i in json.meetingPoints) {
 			var p = json.meetingPoints[i];
-			var output = "";
+			var output = null;
 			
-			if(p.type == "vb") {
-				output = HtmlGenerator.vb(p);
-			} else if (p.type == "meetingOpen") {
-				output = HtmlGenerator.meetingOpen(p);
-			} else if (p.type == "customQuestion") {
-				output = HtmlGenerator.customQuestion(p);
+			if(typeof meetingPoints[p.type].html == 'function') {
+				output = meetingPoints[p.type].html(p);
 			} else {
 				console.info("Todo: Write html generator function for " + p.type);
 			}
 			
-			o.append("<p>" + output + "</p>");
+			var wrapper = $("<p>");
+			wrapper.append(output);
+			o.append(wrapper);
 		}
-	}
-
-	static vb(p) {
-		return '<h2>'+ p.title +'</h2><p>' + p.data.text + '</p>';
-	}
-
-	static meetingOpen(p) {
-		return '<h2>'+ p.title +'</h2><p>' + p.data.meetingOpener + " öppnade mötet klockan " + p.data.meetingOpenTime + '</p>';
-	}
-	
-	static customQuestion(p) {
-		return '<h2>'+ p.data.title +'</h2><p>' + p.data.text + "<br><br>" + p.data.beslut + '</p>';
-	}
-}
+	};
+};
