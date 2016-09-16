@@ -50,13 +50,40 @@ function ProtoGen() {
 			});
 		});
 
-		$('<div class="addNewMeetingPoint">').text("Ny punkt").appendTo('body').on('click', function(ev) {
+		$('<li>Aktuellt möte<ul><li class="addNewMeetingPoint">Ny punkt</li><li class="motesinstallningarMenu">Mötesinställningar</li></ul></li>').appendTo('#main-menu');
+
+		$(".addNewMeetingPoint").on('click', function(ev) {
 			var punkt = ProtoGen.copyPoint(meetingPoints.customQuestion);
 
 			json.meetingPoints.push(punkt);
 			initMeeting(json);
 			jesus.sendSaveRequest(json);
 		});
+
+		$(".motesinstallningarMenu").on('click', function(ev) {
+			$('<div title="Mötesinställningar"><strong>Organisationsnamn</strong><br><input placeholder="Ung Pirat Stockholm" id="orgNameInput"><br><br><strong>Mötesnamn</strong><br><input placeholder="Årsmöte 2017" id="meetingNameInput"></div>').appendTo('body').dialog({
+				buttons: [
+					{
+						text: "Avbryt",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					{
+						text: "Spara",
+						click: function() {
+							json.orgName = $("#orgNameInput").val();
+							json.meetingTitle = $("#meetingNameInput").val();
+							initMeeting(json);
+							jesus.sendSaveRequest(json);
+						}
+					}
+				]
+			});
+			$("#orgNameInput").val(json.orgName);
+			$("#meetingNameInput").val(json.meetingTitle);
+		});
+		$( "#main-menu" ).menu("refresh");
 	};
 
 	function showStartScreen() {
@@ -76,6 +103,10 @@ function ProtoGen() {
 			<li>Pågående möten\
 				<ul id="menu-current-meetings">\
 				</ul>\
+			</li>\
+			<li>Arkiverade möten\
+				<ul id="menu-archived-meetings">\
+				</ul>\
 			</li>';
 		$('body').append(menu);
 
@@ -83,24 +114,52 @@ function ProtoGen() {
 		$("#main-menu").find('li.nyttMoteMenu').on('click', function(ev) {
 			var typ = $(ev.currentTarget).attr('id');
 
-			if(typ == 'new-meeting-arsmote') {
-				initMeeting(window.originalArsmote);
-			} else if(typ == 'new-meeting-styrelsemote') {
-				initMeeting(window.originalStyrelsemote);
-			} else if(typ == 'new-meeting-konst-styrelsemote') {
-				initMeeting(window.originalKonstituerande);
-			}
+			$('<div title="Mötesinställningar"><strong>Organisationsnamn</strong><br><input placeholder="Ung Pirat Stockholm" id="orgNameInput"><br><br><strong>Mötesnamn</strong><br><input placeholder="Årsmöte 2017" id="meetingNameInput"></div>').appendTo('body').dialog({
+				buttons: [
+					{
+						text: "Avbryt",
+						click: function() {
+							$( this ).dialog( "close" );
+						}
+					},
+					{
+						text: "Spara",
+						click: function() {
+							var meetingData = null;
+							if(typ == 'new-meeting-arsmote') {
+								meetingData = window.originalArsmote;
+							} else if(typ == 'new-meeting-styrelsemote') {
+								meetingData = window.originalStyrelsemote;
+							} else if(typ == 'new-meeting-konst-styrelsemote') {
+								meetingData = window.originalKonstituerande;
+							}
+							meetingData.orgName = $("#orgNameInput").val();
+							meetingData.meetingTitle = $("#meetingNameInput").val();
+							$( this ).dialog( "close" );
+							initMeeting(meetingData);
+						}
+					}
+				]
+			});
 		});
 
 		// pågående möten
 		$.get('backend/index.php?do=loadAll').done(function(data) {
-			var list = $('#menu-current-meetings');
+			var currentMeetings = $('#menu-current-meetings');
+			var archivedMeetings = $('#menu-archived-meetings');
 			for(var i in data) {
-				var el = $('<li>').text(data[i]['title']).addClass("pagaendeMotenMenu");
+				var el = $('<li>').text(data[i]['title'] + " för " + data[i]['orgName']);
 				el.data('meetingname', data[i]['id']);
-				el.appendTo(list);
+
+				if(data[i]['editable'] == "1") {
+					el.addClass("pagaendeMotenMenu");
+					el.appendTo(currentMeetings);
+				} else {
+					el.addClass("arkiveradeMotenMenu");
+					el.appendTo(archivedMeetings);
+				}
 			}
-			$("#main-menu").find('li.pagaendeMotenMenu').on('click', function(ev) {
+			$("#main-menu").find('li.pagaendeMotenMenu, li.arkiveradeMotenMenu').on('click', function(ev) {
 				var meetingname = $(ev.currentTarget).data('meetingname');
 				if(meetingname) {
 					$.post('backend/index.php?do=load', JSON.stringify({ 'id': meetingname })).done(function(data) {

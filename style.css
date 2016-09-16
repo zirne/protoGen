@@ -92,10 +92,3 @@ p {
 .required {
 	color: red;
 }
-
-
-.addNewMeetingPoint {
-	position: fixed;
-	top: 30px;
-	right: 20px;
-}

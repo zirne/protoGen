@@ -5,7 +5,7 @@ function HtmlGenerator() {
 		var o = $("#output");
 		o.empty();
 
-		var heading = $("<h1>").text("Möte för " + json.orgName).appendTo(o);
+		var heading = $("<h1>").text(json.meetingTitle + " för " + json.orgName).appendTo(o);
 		heading.height(40).css("padding", 0).css("margin", 0);
 		var list = $("<ol>").appendTo(o);
 
