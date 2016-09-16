@@ -12,13 +12,13 @@ function HtmlGenerator() {
 		for(var i in json.meetingPoints) {
 			var p = json.meetingPoints[i];
 			var output = null;
-			
+
 			if(typeof meetingPoints[p.type].html == 'function') {
 				output = meetingPoints[p.type].html(p);
 			} else {
 				console.info("Todo: Write html generator function for " + p.type);
 			}
-			
+
 			var wrapper = $("<li>").css("overflow", "unset");
 			var wrapper2 = $("<div>").css("overflow", "auto");
 
