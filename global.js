@@ -10,6 +10,7 @@ function ProtoGen() {
 	function initMeeting(initial_json) {
 		json = initial_json;
 		$('body').empty();
+		initMenu();
 		$('<div>').attr('id', 'input').appendTo($('body'));
 		$('<div>').attr('id', 'output').appendTo($('body'));
 		
@@ -49,7 +50,7 @@ function ProtoGen() {
 			});
 		});
 
-		$('<div>').text("Ny punkt").appendTo('body').on('click', function(ev) {
+		$('<div class="addNewMeetingPoint">').text("Ny punkt").appendTo('body').on('click', function(ev) {
 			var punkt = ProtoGen.copyPoint(meetingPoints.customQuestion);
 
 			json.meetingPoints.push(punkt);
@@ -59,49 +60,61 @@ function ProtoGen() {
 	};
 
 	function showStartScreen() {
+		$('body').empty();
+		initMenu();
+	};
+
+	function initMenu() {
+		var menu = '<ul id="main-menu" style="width: 100%; position: fixed;">\
+			<li>Nytt möte\
+				<ul>\
+					<li id="new-meeting-arsmote" class="nyttMoteMenu">Årsmöte</li>\
+					<li id="new-meeting-styrelsemote" class="nyttMoteMenu">Styrelsemöte</li>\
+					<li id="new-meeting-konst-styrelsemote" class="nyttMoteMenu">Konst. styrelsemöte</li>\
+				</ul>\
+			</li>\
+			<li>Pågående möten\
+				<ul id="menu-current-meetings">\
+				</ul>\
+			</li>';
+		$('body').append(menu);
+
+		// nya möten
+		$("#main-menu").find('li.nyttMoteMenu').on('click', function(ev) {
+			var typ = $(ev.currentTarget).attr('id');
+
+			if(typ == 'new-meeting-arsmote') {
+				initMeeting(window.originalArsmote);
+			} else if(typ == 'new-meeting-styrelsemote') {
+				initMeeting(window.originalStyrelsemote);
+			} else if(typ == 'new-meeting-konst-styrelsemote') {
+				initMeeting(window.originalKonstituerande);
+			}
+		});
+
+		// pågående möten
 		$.get('backend/index.php?do=loadAll').done(function(data) {
-			$('body').empty();
-			var list = $('<div>');
-			var el = $('<div>').text("Nytt årsmöte");
-			el.data('motestyp', 'arsmote');
-			el.appendTo(list);
-
-			el = $('<div>').text("Nytt styrelsemöte");
-			el.data('motestyp', 'styrelsemote');
-			el.appendTo(list);
-
-			el = $('<div>').text("Nytt konstituerande styrelsemöte");
-			el.data('motestyp', 'konstituerande_styrelsemote');
-			el.appendTo(list);
-
+			var list = $('#menu-current-meetings');
 			for(var i in data) {
-				var el = $('<div>').text(data[i]['title']);
-				el.data('id', data[i]['id']);
+				var el = $('<li>').text(data[i]['title']).addClass("pagaendeMotenMenu");
+				el.data('meetingname', data[i]['id']);
 				el.appendTo(list);
 			}
-			list.find('div').on('click', function(ev) {
-				var id = $(ev.currentTarget).data('id');
-				if(id) {
-					$.post('backend/index.php?do=load', JSON.stringify({ 'id': id })).done(function(data) {
+			$("#main-menu").find('li.pagaendeMotenMenu').on('click', function(ev) {
+				var meetingname = $(ev.currentTarget).data('meetingname');
+				if(meetingname) {
+					$.post('backend/index.php?do=load', JSON.stringify({ 'id': meetingname })).done(function(data) {
 						initMeeting(data);
 					});
-				} else {
-					var typ = $(ev.currentTarget).data('motestyp');
-
-					if(typ == 'arsmote') {
-						initMeeting(window.originalArsmote);
-					} else if(typ == 'styrelsemote') {
-						initMeeting(window.originalStyrelsemote);
-					} else if(typ == 'konstituerande_styrelsemote') {
-						initMeeting(window.originalKonstituerande);
-					} else {
-						alert("Smurf");
-					}
 				}
 			});
-			list.appendTo('body');
+			$( "#main-menu" ).menu("refresh");
 		});
-	};
+
+		$( "#main-menu" ).menu({
+			  position: { my: "left top", at : "left bottom", collision: "fit" }
+		});
+	}
 };
 
 ProtoGen.copyPoint = function(original) {

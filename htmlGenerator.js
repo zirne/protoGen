@@ -29,7 +29,8 @@ function HtmlGenerator() {
 			var heightHtml = wrapper2.outerHeight(true);
 			$("#" + p.id ).parents('.meetingPointWrapper').first().css("min-height",heightHtml);
 			wrapper.height($("#" + p.id ).parents('.meetingPointWrapper').first().height());
-			$("#input").css("padding-top", 40);
+			$("#input").css("padding-top", 70);
+			$("#output").css("padding-top", 30);
 
 		}
 	};

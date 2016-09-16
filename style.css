@@ -1,3 +1,22 @@
+
+#main-menu {
+	z-index: 200;
+}
+
+#main-menu li {
+	white-space: nowrap;
+	font-weight: normal;
+	z-index: 200;
+}
+#main-menu > li {
+	display: inline-block;
+}
+#main-menu .ui-icon-carat-1-e {
+	background-image: none;
+}
+
+
+
 #resetButton {
 	display: block;
 	position: absolute;
@@ -32,9 +51,9 @@ html {
 
 body {
 	font-family: "Open Sans",Arial,Helvetica,sans-serif;
-	padding: 30px;
+	padding: 0px;
+	margin: 0px;
 	font-size: 12px;
-	padding-left: 90px;
 }
 code {
 	background-color: #ddd;
@@ -72,4 +91,11 @@ p {
 
 .required {
 	color: red;
+}
+
+
+.addNewMeetingPoint {
+	position: fixed;
+	top: 30px;
+	right: 20px;
 }
