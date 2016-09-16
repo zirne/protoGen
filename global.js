@@ -1,3 +1,16 @@
+String.prototype.hashCode = function(){
+	var hash = 0;
+	if (this.length == 0) return hash;
+	for (i = 0; i < this.length; i++) {
+		char = this.charCodeAt(i);
+		hash = ((hash<<5)-hash)+char;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
+}
+
+
+
 function ProtoGen() {
 	var jesus = new Jesus();
 	var htmlGenerator = new HtmlGenerator();
@@ -6,6 +19,31 @@ function ProtoGen() {
 	var json = null;
 	var that = this;
 	showStartScreen();
+
+	function listenInOnMeeting(json, refresh, doNotEmptyBody, scroll) {
+		$.post('backend/index.php?do=load', JSON.stringify({ 'id': json.meetingID })).done(function(data) {
+			if(!doNotEmptyBody || JSON.stringify(data) != JSON.stringify(json)) {
+				json = data;
+				if(!doNotEmptyBody) {
+					$('body').empty();
+					initMenu();
+				} else {
+					$('#output').remove();
+				}
+				$('<div>').attr('id', 'output').css('width', '100%').appendTo($('body'));
+				htmlGenerator.generateHtml(json);
+				if(doNotEmptyBody) {
+					$(window).scrollTop(scroll);
+				}
+			}
+
+			if(refresh) {
+				 setTimeout(function() {
+					listenInOnMeeting(json, true, true, $(window).scrollTop());
+				}, 2000);
+			}
+		});
+	}
 
 	function initMeeting(initial_json) {
 		json = initial_json;
@@ -101,8 +139,12 @@ function ProtoGen() {
 					<li id="new-meeting-konst-styrelsemote" class="nyttMoteMenu">Konst. styrelsemöte</li>\
 				</ul>\
 			</li>\
-			<li>Pågående möten\
+			<li>Redigera möte\
 				<ul id="menu-current-meetings">\
+				</ul>\
+			</li>\
+			<li>Lyssna in på möte\
+				<ul id="menu-listen-meetings">\
 				</ul>\
 			</li>\
 			<li>Arkiverade möten\
@@ -148,6 +190,7 @@ function ProtoGen() {
 		$.get('backend/index.php?do=loadAll').done(function(data) {
 			var currentMeetings = $('#menu-current-meetings');
 			var archivedMeetings = $('#menu-archived-meetings');
+			var listenMeetings = $('#menu-listen-meetings');
 			for(var i in data) {
 				var el = $('<li>').text(data[i]['title'] + " för " + data[i]['orgName']);
 				el.data('meetingname', data[i]['id']);
@@ -155,16 +198,27 @@ function ProtoGen() {
 				if(data[i]['editable'] == "1") {
 					el.addClass("pagaendeMotenMenu");
 					el.appendTo(currentMeetings);
+
+					var el2 = $('<li>').text(data[i]['title'] + " för " + data[i]['orgName']);
+					el2.data('meetingname', data[i]['id']);
+					el2.addClass("listenMotenMenu");
+					el2.appendTo(listenMeetings);
 				} else {
 					el.addClass("arkiveradeMotenMenu");
 					el.appendTo(archivedMeetings);
 				}
 			}
-			$("#main-menu").find('li.pagaendeMotenMenu, li.arkiveradeMotenMenu').on('click', function(ev) {
+			$("#main-menu").find('li.pagaendeMotenMenu, li.arkiveradeMotenMenu, li.listenMotenMenu').on('click', function(ev) {
 				var meetingname = $(ev.currentTarget).data('meetingname');
 				if(meetingname) {
 					$.post('backend/index.php?do=load', JSON.stringify({ 'id': meetingname })).done(function(data) {
-						initMeeting(data);
+						if($(ev.currentTarget).hasClass("arkiveradeMotenMenu")) {
+							listenInOnMeeting(data,false);
+						} else if($(ev.currentTarget).hasClass("listenMotenMenu")) {
+							listenInOnMeeting(data, true);
+						} else {
+							initMeeting(data);
+						}
 					});
 				}
 			});
