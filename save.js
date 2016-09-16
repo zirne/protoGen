@@ -23,6 +23,7 @@ function Jesus() {
 	};
 
 	this.sendSaveRequest = function(json) {
+		$("#saveMarker").addClass("saveMarkerLoading");
 		if(!saveTimeout) {
 			saveTimeout = setTimeout(function() {
 				$.ajax({
@@ -35,6 +36,7 @@ function Jesus() {
 						alert(data.error);
 					} else {
 						json.meetingID = data.meetingID;
+						$("#saveMarker").removeClass("saveMarkerLoading");
 					}
 				}).error(function(data) {
 					alert("Kunde inte spara");

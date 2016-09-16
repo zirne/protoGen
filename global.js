@@ -11,6 +11,7 @@ function ProtoGen() {
 		json = initial_json;
 		$('body').empty();
 		initMenu();
+		$('<div id="saveMarker">').appendTo('body');
 		$('<div>').attr('id', 'input').appendTo($('body'));
 		$('<div>').attr('id', 'output').appendTo($('body'));
 		

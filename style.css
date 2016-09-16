@@ -92,3 +92,18 @@ p {
 .required {
 	color: red;
 }
+
+
+#saveMarker {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 10px;
+	width: 10px;
+	background-color: #11CC11;
+	z-index: 200;
+}
+
+#saveMarker.saveMarkerLoading {
+	background-color: red;
+}
