@@ -233,7 +233,7 @@ var meetingPoints =  {
 			var form = $("<form>").appendTo(html);
 			$("<p>").text("Vem justerar protokollet?").appendTo(form);
 
-			$("<textarea>").text(p.data.meetingAdjustors).addClass("validatorField").appendTo(html);
+			$("<textarea>").text(p.data.meetingAdjustors).addClass("validatorField").appendTo(form);
 			$("<br>").appendTo(form);
 
 			return html;
@@ -292,7 +292,7 @@ var meetingPoints =  {
 			$("<input>").val(p.data.orgNewSecretary).addClass("validatorField").addClass("orgNewSecretary").appendTo(form);
 			$("<br><br>").appendTo(form);
 			$("<p>").text("Ledamöter (En person per rad!):").appendTo(form);
-			$("<textarea>").text(p.data.orgNewBoardMembers).addClass("validatorField").appendTo(html);
+			$("<textarea>").text(p.data.orgNewBoardMembers).addClass("validatorField").appendTo(form);
 			$("<br>").appendTo(form);
 
 			return html;
@@ -320,6 +320,88 @@ var meetingPoints =  {
 			return p;
 		}
 	},
+	orgElectionCommitee : {//Template for single-line one variable inputs
+		type: "orgElectionCommitee",
+		title: "Val av årets valberedning",
+		data: {
+			text: "Val Beredarsson"
+		},
+		html : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			$("<p>").text( "Mötet valde").appendTo(html);
+
+			var theArray = p.data.text.trim().split("\n").filter(function(a){return a});
+			if(theArray.length >= 2) {
+				var lastName = theArray.pop();
+				$("<p>").text(theArray.join(", ") + " samt " + lastName + " till ledamöter").appendTo(html);;
+			} else if (theArray[0]){
+				$("<p>").text(theArray[0] + " till ledamot.").appendTo(html);
+			}
+			return html;
+		},
+		form : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			var form = $("<form>").appendTo(html);
+			$("<p>").text("Valberedning (En person per rad!):").appendTo(form);
+			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(form);
+			$("<br>").appendTo(form);
+
+			return html;
+		},
+		validation: function(p) {//TODO: Write validation for cross-referencing
+			if(p.data.text == "") {
+				return "Ni måste välja en ordförande.";
+			}
+			return null;
+		},
+		save : function(p, target) {
+			p.data.text = $(target).find('textarea').first().val();
+			return p;
+		}
+	},
+	orgAuditors : {//Template for single-line one variable inputs
+		type: "orgAuditors",
+		title: "Val av årets revisor",
+		data: {
+			text: "Rev Isorsson"
+		},
+		html : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			$("<p>").text( "Mötet valde").appendTo(html);
+
+			var theArray = p.data.text.trim().split("\n").filter(function(a){return a});
+			if(theArray.length >= 2) {
+				var lastName = theArray.pop();
+				$("<p>").text(theArray.join(", ") + " samt " + lastName + " till revisor").appendTo(html);;
+			} else if (theArray[0]){
+				$("<p>").text(theArray[0] + " till revisor.").appendTo(html);
+			}
+			return html;
+		},
+		form : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			var form = $("<form>").appendTo(html);
+			$("<p>").text("Revisor (En person per rad!):").appendTo(form);
+			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(form);
+			$("<br>").appendTo(form);
+
+			return html;
+		},
+		validation: function(p) {//TODO: Write validation for cross-referencing
+			if(p.data.text == "") {
+				return "Ni måste välja minst en revisor.";
+			}
+			return null;
+		},
+		save : function(p, target) {
+			p.data.text = $(target).find('textarea').first().val();
+			return p;
+		}
+	},
 	vb: {
 		type: "vb",
 		title: "Verksamhetsberättelse för föregående år",
@@ -335,7 +417,7 @@ var meetingPoints =  {
 		form : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
-			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(html);
+			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(form);
 			return html;
 		},
 		validation: function(p) {
@@ -357,42 +439,94 @@ var meetingPoints =  {
 		type: "meetingEnd",
 		title: "Mötets avslutande",
 		data: {
-			meetingOpener: "mlg",
-			meetingOpenTime: "2016-01-05 12:34:56"
+			meetingCloser: "mlg",
+			meetingCloseTime: "2016-01-05 12:34:56"
 		},
 		html : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
-			$("<p>").text( p.data.meetingOpener + " öppnade mötet klockan " + p.data.meetingOpenTime ).appendTo(html);
+			$("<p>").text( p.data.meetingCloser + " avslutade mötet klockan " + p.data.meetingCloseTime ).appendTo(html);
 			return html;
 		},
 		form : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
 			var form = $("<form>").appendTo(html);
-			$("<span>").text("Mötets öppnare: ").appendTo(form);
-			$("<input>").val(p.data.meetingOpener).addClass("validatorField").addClass("meetingOpener").appendTo(form);
+			$("<span>").text("Mötets avslutande: ").appendTo(form);
+			$("<input>").val(p.data.meetingCloser).addClass("validatorField").addClass("meetingOpener").appendTo(form);
 			$("<br>").appendTo(form);
 
-			$("<span>").text("Öppnat klockan: ").appendTo(form);
-			$("<input>").val(p.data.meetingOpenTime).addClass("validatorField").addClass("meetingOpenTime").appendTo(form);
+			$("<span>").text("Avslutat klockan: ").appendTo(form);
+			$("<input>").val(p.data.meetingCloseTime).addClass("validatorField").addClass("meetingOpenTime").appendTo(form);
 
 			return html;
 		},
 		validation: function(p) {
-			if(p.data.meetingOpener == "") {
+			if(p.data.meetingCloser == "") {
 				return "Någon måste öppna";
 			}
 
-			if(p.data.meetingOpenTime == "") {
+			if(p.data.meetingCloseTime == "") {
 				return "Ni måste öppna nån gång";
 			}
 
 			return null;
 		},
 		save : function(p, target) {
-			p.data.meetingOpenTime = $(target).find('input.meetingOpenTime').first().val();
-			p.data.meetingOpener = $(target).find('input.meetingOpener').first().val();
+			p.data.meetingCloseTime = $(target).find('input.meetingCloseTime').first().val();
+			p.data.meetingCloser = $(target).find('input.meetingCloser').first().val();
+			return p;
+		}
+	},
+	orgLegalReps : {//Template for single-line one variable inputs
+		type: "orgLegalReps",
+		title: "Val av firmatecknare",
+		data: {
+			text: "Firma Tecknarsson, 19910206-1234"
+		},
+		html : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			$("<p>").text( "Mötet valde").appendTo(html);
+
+			var theArray = p.data.text.trim().split("\n").filter(function(a){return a});
+
+
+			for(var i in theArray) {
+				var pArray = theArray[i].trim().split(",");
+
+				var pNR = pArray[1].trim();
+				pNR = pNR.split("-");
+				pNR = pNR[0].substring(0, 4) + "-" + pNR[0].substring(4, 6) + "-" + pNR[0].substring(6,8);
+				var date = new Date(pNR);
+
+			//var lastPerson = theArray.pop();
+			if(theArray.length >= 2) {
+				var lastPerson = theArray.pop();
+				$("<p>").text(theArray.join(", ") + " samt " + lastPerson + " att teckna föreningens firma").appendTo(html);;
+			} else if (theArray[0]){
+				$("<p>").text(theArray[0] + " att teckna föreningens firma.").appendTo(html);
+			}
+			return html;
+		},
+		form : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			var form = $("<form>").appendTo(html);
+			$("<p>").text("Firmatecknare (En person per rad!):").appendTo(form);
+			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(form);
+			$("<br>").appendTo(form);
+
+			return html;
+		},
+		validation: function(p) {//TODO: Write validation for cross-referencing
+			if(p.data.text == "") {
+				return "Ni måste välja minst en firmatecknare.";
+			}
+			return null;
+		},
+		save : function(p, target) {
+			p.data.text = $(target).find('textarea').first().val();
 			return p;
 		}
 	},
@@ -464,6 +598,8 @@ window.originalArsmote = {
 		ProtoGen.copyPoint(meetingPoints.meetingAdjustor),
 		ProtoGen.copyPoint(meetingPoints.vb),
 		ProtoGen.copyPoint(meetingPoints.orgNewBoard),
+		ProtoGen.copyPoint(meetingPoints.orgElectionCommitee),
+		ProtoGen.copyPoint(meetingPoints.orgAuditors),
 		ProtoGen.copyPoint(meetingPoints.meetingEnd)
 	]
 };
@@ -490,6 +626,7 @@ window.originalKonstituerande = {
 		ProtoGen.copyPoint(meetingPoints.meetingValidCall),
 		ProtoGen.copyPoint(meetingPoints.meetingChair),
 		ProtoGen.copyPoint(meetingPoints.meetingSecretary),
-		ProtoGen.copyPoint(meetingPoints.vb)
+		ProtoGen.copyPoint(meetingPoints.orgLegalReps),
+		ProtoGen.copyPoint(meetingPoints.meetingEnd)
 	]
 };
