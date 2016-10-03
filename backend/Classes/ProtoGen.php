@@ -1,23 +1,28 @@
 <?php
 class ProtoGen {
 	public function onMessage(){
-		$payload = file_get_contents("php://input");
-		$postdata = json_decode($payload, true);
-	
+		if ($_GET['do'] !== "upload"){
+			$payload = file_get_contents("php://input");
+			$postdata = json_decode($payload, true);
+		}
+
 		try{
 			$result = null;
 			switch ($_GET['do']) {
 				case 'save':
 					$result = (new Save())->handle($postdata);
 					break;
-				
+
 				case 'load':
 					$result = (new Load())->handle($postdata);
 					break;
-					
+
 				case 'loadAll':
 					$result = (new LoadAll())->handle($postdata);
 					break;
+
+				case 'upload';
+					$result =  (new Upload())->handle($_FILES);
 
 				default:
 					# code...
