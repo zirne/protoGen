@@ -216,7 +216,15 @@ var meetingPoints =  {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
 			$("<p>").text( "Mötet valde").appendTo(html);
-			$("<p>").text( p.data.meetingAdjustors + " till justerare.").appendTo(html);
+
+			var theArray = p.data.meetingAdjustors.trim().split("\n").filter(function(a){return a});
+			if(theArray.length >= 2) {
+				var lastName = theArray.pop();
+				$("<p>").text(theArray.join(", ") + " samt " + lastName + " till justerare").appendTo(html);;
+			} else if (theArray[0]){
+				$("<p>").text(theArray[0] + " till justerare.").appendTo(html);
+			}
+
 			return html;
 		},
 		form : function(p) { //TODO: Make sure that right pane height updates properly
