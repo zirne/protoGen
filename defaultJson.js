@@ -505,6 +505,7 @@ var meetingPoints =  {
 				pNR = pNR[0].substring(0, 4) + "-" + pNR[0].substring(4, 6) + "-" + pNR[0].substring(6,8);
 				var date = new Date(pNR);
 
+			}
 			//var lastPerson = theArray.pop();
 			if(theArray.length >= 2) {
 				var lastPerson = theArray.pop();
