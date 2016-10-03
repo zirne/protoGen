@@ -173,7 +173,7 @@ var meetingPoints =  {
 		type: "meetingSecretary",
 		title: "Val av mötessekreterare",
 		data: {
-			meetingChair: "Din Mamma"
+			meetingSecretary: "Din Mamma"
 		},
 		html : function(p) {
 			var html = $("<div>");
@@ -194,7 +194,7 @@ var meetingPoints =  {
 		},
 		validation: function(p) {//TODO: Write validation for cross-referencing
 			if(p.data.meetingSecretary == "") {
-				return "Ni måste välja en mötesordförande.";
+				return "Ni måste välja en mötessekreterare.";
 			}
 			if(Validator.fullNameCheck(p.data.meetingSecretary) == false){
 				return "Ni måste skriva både för- och efternamn.";
@@ -203,6 +203,111 @@ var meetingPoints =  {
 		},
 		save : function(p, target) {
 			p.data.meetingSecretary = $(target).find('input.meetingSecretary').first().val();
+			return p;
+		}
+	},
+	meetingAdjustor : {
+		type: "meetingAdjustor",
+		title: "Val av justerare",
+		data: {
+			meetingAdjustors: [{name: "Justerik Justerarsson", hidden : false},
+				{name: "Nån snubbe", hidden : false },
+				{name: null, hidden : true}]
+		},
+		html : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			$("<p>").text( "Mötet valde").appendTo(html);
+			$("<p>").text( p.data.meetingAdjustors[0].name + " till justerare.").appendTo(html);
+			return html;
+		},
+		form : function(p) { //TODO: Make sure that right pane height updates properly
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			var form = $("<form>").appendTo(html);
+			$("<p>").text("Vem justerar protokollet?").appendTo(form);
+		//	var subDiv = $("<div>").addClass("adjustorSubDiv").appendTo(form);
+
+	//		var meetingAdjustorCounter = p.data.meetingAdjustors.length;
+			function increment() {
+				/*
+				meetingAdjustorCounter++;
+				if(meetingAdjustorCounter > 3){
+					decrement();
+				}
+				//console.log(meetingAdjustorCounter);//For debugging
+				drawAdjustors();
+*/
+			}
+
+			function decrement(inputfalt) {
+				/*
+				meetingAdjustorCounter--;
+				if(meetingAdjustorCounter < 1){
+					increment();
+				}
+				*/
+				//console.log(meetingAdjustorCounter);//For debugging
+				inputfalt.parent().hide();
+				//console.log(form.find(".validatorField").first());
+				//console.log("ska trigga changed");
+				var i = inputfalt.data("i");
+				console.log("i decremet" + i);
+				console.log(inputfalt);
+				p.data.meetingAdjustors[i]['hidden'] = true;
+				form.find(".validatorField").first().trigger("change");
+				//drawAdjustors();
+			}
+
+			function drawAdjustors(){
+				//$( ".adjustorSubDiv" ).empty();
+				for (i = 0; i < p.data.meetingAdjustors.length; i++){
+					console.log("ska printa ut adjustor nummer " + i)
+					//What to do for each in counter
+					var subDiv = $("<div>");
+					var inputfalt = $("<input>").val(p.data.meetingAdjustors[i].name).attr('id','adjustorsID' + i).addClass("validatorField").addClass("meetingAdjustor").appendTo(subDiv);
+					inputfalt.data("i", "" + i);
+					if (i == 0) {//TODO:Substitute hardcoded 0 with meetingSetting for min adjustors here when meetingSettings is implemented! OR MAYBE NOT!
+						$("<span> style='font-weight:bold'").text("+	").css("font-weight", "bold").css("font-weight", "bold").click(function () {increment() }).appendTo(subDiv);//TODO Fix CSS for class later
+					}else if (i == 2) {//TODO:Substitute hardcoded 2 with (meetingSetting - 1) for max adjustors here when meetingSettings is implemented!
+						$("<span> style='font-weight:bold'").text("-").css("font-weight", "bold").click(function() { decrement(inputfalt);} ).appendTo(subDiv);
+					}else{
+						$("<span> style='font-weight:bold'").text("+	").css("font-weight", "bold").click(function () {increment() }).appendTo(subDiv);
+						$("<span> style='font-weight:bold'").text("-").css("font-weight", "bold").click(function() { decrement(inputfalt);}).appendTo(subDiv);
+					}
+					$("<br>").appendTo(subDiv);
+					if(p.data.meetingAdjustors[i].hidden) {
+						subDiv.hide();
+					}
+					subDiv.appendTo(form);
+
+					//jesus.sendSaveRequest(json);
+				}
+			}
+			drawAdjustors();
+			return html;
+		},
+		validation: function(p) {//TODO: Write validation for cross-referencing
+			if(p.data.meetingAdjustors == "") {
+				return "Ni måste välja minst en justerare.";
+			}
+			if(Validator.fullNameCheck(p.data.meetingAdjustors) == false){
+				return "Ni måste skriva både för- och efternamn.";
+			}
+			return null;
+		},
+		save : function(p, target) {
+			//p.data.meetingAdjustors = $(target).find('input.meetingAdjustor').val();
+			p.data.meetingAdjustors = [];
+			$(target).find('input.meetingAdjustor').each(function(i) {
+				var field = $(this);
+				console.log(this);
+				var newObject = {};
+				newObject['name'] = field.val();
+				newObject['hidden'] = field.parent().filter(":hidden").length == 1 ? true : false;
+				p.data.meetingAdjustors.push(newObject);
+				console.log(p.data);
+			});
 			return p;
 		}
 	},
@@ -307,6 +412,49 @@ var meetingPoints =  {
 			return p;
 		}
 	},
+	meetingEnd: {
+		type: "meetingEnd",
+		title: "Mötets avslutande",
+		data: {
+			meetingOpener: "mlg",
+			meetingOpenTime: "2016-01-05 12:34:56"
+		},
+		html : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			$("<p>").text( p.data.meetingOpener + " öppnade mötet klockan " + p.data.meetingOpenTime ).appendTo(html);
+			return html;
+		},
+		form : function(p) {
+			var html = $("<div>");
+			$("<h2>").text(p.title).appendTo(html);
+			var form = $("<form>").appendTo(html);
+			$("<span>").text("Mötets öppnare: ").appendTo(form);
+			$("<input>").val(p.data.meetingOpener).addClass("validatorField").addClass("meetingOpener").appendTo(form);
+			$("<br>").appendTo(form);
+
+			$("<span>").text("Öppnat klockan: ").appendTo(form);
+			$("<input>").val(p.data.meetingOpenTime).addClass("validatorField").addClass("meetingOpenTime").appendTo(form);
+			
+			return html;
+		},
+		validation: function(p) {
+			if(p.data.meetingOpener == "") {
+				return "Någon måste öppna";
+			}
+
+			if(p.data.meetingOpenTime == "") {
+				return "Ni måste öppna nån gång";
+			}
+
+			return null;
+		},
+		save : function(p, target) {
+			p.data.meetingOpenTime = $(target).find('input.meetingOpenTime').first().val();
+			p.data.meetingOpener = $(target).find('input.meetingOpener').first().val();
+			return p;
+		}
+	},
 	customQuestion : {
 		type: "customQuestion",
 		data: {
@@ -369,7 +517,13 @@ window.originalArsmote = {
 	meetingTitle: "Årsmöte för Hackerspace",
 	meetingPoints: [
 		ProtoGen.copyPoint(meetingPoints.meetingOpen),
-		ProtoGen.copyPoint(meetingPoints.vb)
+		ProtoGen.copyPoint(meetingPoints.meetingValidCall),
+		ProtoGen.copyPoint(meetingPoints.meetingChair),
+		ProtoGen.copyPoint(meetingPoints.meetingSecretary),
+		ProtoGen.copyPoint(meetingPoints.meetingAdjustor),
+		ProtoGen.copyPoint(meetingPoints.vb),
+		ProtoGen.copyPoint(meetingPoints.orgNewBoard),
+		ProtoGen.copyPoint(meetingPoints.meetingEnd)
 	]
 };
 
@@ -392,6 +546,9 @@ window.originalKonstituerande = {
 	meetingTitle: "Konstituerande Styrelsemote för Hackerspace",
 	meetingPoints: [
 		ProtoGen.copyPoint(meetingPoints.meetingOpen),
+		ProtoGen.copyPoint(meetingPoints.meetingValidCall),
+		ProtoGen.copyPoint(meetingPoints.meetingChair),
+		ProtoGen.copyPoint(meetingPoints.meetingSecretary),
 		ProtoGen.copyPoint(meetingPoints.vb)
 	]
 };
