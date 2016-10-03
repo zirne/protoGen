@@ -8,7 +8,6 @@ function FileController() {
 	}
 
 	this.printHtml = function() {
-		console.log('printar html');
 		var str = "";
 		for(var i in fileList) {
 			str += " " + fileList[i]['name'];
@@ -21,28 +20,27 @@ function FileController() {
 		if(validatorField.length == 0) {
 			validatorField = $('<input>').addClass('validatorField').hide();
 			container.append(validatorField);
-			console.log('skapar ny');
 		}
 
 		var innerContainer = container.find('.innerContainer');
 		if(innerContainer.length == 0) {
 			innerContainer = $('<div>').addClass('innerContainer');
 			container.append(innerContainer);
-			console.log('skapar ny innercontainer');
 		}
 		innerContainer.empty();
 
 		for(var i in fileList) {
 			$('<div>').text(fileList[i]['name']).appendTo(innerContainer);
 		}
-		var newUploadField = $('<input>').attr('type', 'file').appendTo(innerContainer);
+		var newUploadField = $('<input>').attr('type', 'file').attr('name', "file").appendTo(innerContainer);
 		$('<button>').on('click', function(ev) {
 			ev.preventDefault();
 			ev.stopPropagation();
 
-			var formData = new FormData(newUploadField.parent('form')[0]);
+			var formData = new FormData(newUploadField.parents('form')[0]);
+
 			$.ajax({
-				url: '?do=upload',
+				url: 'backend/index.php?do=upload',
 				type: 'POST',
 				xhr: function() {
 					var myXhr = $.ajaxSettings.xhr();
@@ -67,7 +65,7 @@ function FileController() {
 				},
 				error: function(e) {
 					console.log(e);
-					alert('Det gick ju inge bra');
+					alert('Det gick ju åt helvete');
 				},
 				data: formData,
 				cache: false,
