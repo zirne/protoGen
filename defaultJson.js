@@ -218,7 +218,7 @@ var meetingPoints =  {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
 			$("<p>").text( "Mötet valde").appendTo(html);
-			$("<p>").text( p.data.meetingAdjustors[0].name + " till justerare.").appendTo(html);
+			$("<p>").text( p.data.meetingAdjustors + " till justerare.").appendTo(html);
 			return html;
 		},
 		form : function(p) { //TODO: Make sure that right pane height updates properly
@@ -226,65 +226,10 @@ var meetingPoints =  {
 			$("<h2>").text(p.title).appendTo(html);
 			var form = $("<form>").appendTo(html);
 			$("<p>").text("Vem justerar protokollet?").appendTo(form);
-		//	var subDiv = $("<div>").addClass("adjustorSubDiv").appendTo(form);
 
-	//		var meetingAdjustorCounter = p.data.meetingAdjustors.length;
-			function increment() {
-				/*
-				meetingAdjustorCounter++;
-				if(meetingAdjustorCounter > 3){
-					decrement();
-				}
-				//console.log(meetingAdjustorCounter);//For debugging
-				drawAdjustors();
-*/
-			}
+			$("<textarea>").text(p.data.meetingAdjustors).addClass("validatorField").appendTo(html);
+			$("<br>").appendTo(form);
 
-			function decrement(inputfalt) {
-				/*
-				meetingAdjustorCounter--;
-				if(meetingAdjustorCounter < 1){
-					increment();
-				}
-				*/
-				//console.log(meetingAdjustorCounter);//For debugging
-				inputfalt.parent().hide();
-				//console.log(form.find(".validatorField").first());
-				//console.log("ska trigga changed");
-				var i = inputfalt.data("i");
-				console.log("i decremet" + i);
-				console.log(inputfalt);
-				p.data.meetingAdjustors[i]['hidden'] = true;
-				form.find(".validatorField").first().trigger("change");
-				//drawAdjustors();
-			}
-
-			function drawAdjustors(){
-				//$( ".adjustorSubDiv" ).empty();
-				for (i = 0; i < p.data.meetingAdjustors.length; i++){
-					console.log("ska printa ut adjustor nummer " + i)
-					//What to do for each in counter
-					var subDiv = $("<div>");
-					var inputfalt = $("<input>").val(p.data.meetingAdjustors[i].name).attr('id','adjustorsID' + i).addClass("validatorField").addClass("meetingAdjustor").appendTo(subDiv);
-					inputfalt.data("i", "" + i);
-					if (i == 0) {//TODO:Substitute hardcoded 0 with meetingSetting for min adjustors here when meetingSettings is implemented! OR MAYBE NOT!
-						$("<span> style='font-weight:bold'").text("+	").css("font-weight", "bold").css("font-weight", "bold").click(function () {increment() }).appendTo(subDiv);//TODO Fix CSS for class later
-					}else if (i == 2) {//TODO:Substitute hardcoded 2 with (meetingSetting - 1) for max adjustors here when meetingSettings is implemented!
-						$("<span> style='font-weight:bold'").text("-").css("font-weight", "bold").click(function() { decrement(inputfalt);} ).appendTo(subDiv);
-					}else{
-						$("<span> style='font-weight:bold'").text("+	").css("font-weight", "bold").click(function () {increment() }).appendTo(subDiv);
-						$("<span> style='font-weight:bold'").text("-").css("font-weight", "bold").click(function() { decrement(inputfalt);}).appendTo(subDiv);
-					}
-					$("<br>").appendTo(subDiv);
-					if(p.data.meetingAdjustors[i].hidden) {
-						subDiv.hide();
-					}
-					subDiv.appendTo(form);
-
-					//jesus.sendSaveRequest(json);
-				}
-			}
-			drawAdjustors();
 			return html;
 		},
 		validation: function(p) {//TODO: Write validation for cross-referencing
@@ -297,17 +242,7 @@ var meetingPoints =  {
 			return null;
 		},
 		save : function(p, target) {
-			//p.data.meetingAdjustors = $(target).find('input.meetingAdjustor').val();
-			p.data.meetingAdjustors = [];
-			$(target).find('input.meetingAdjustor').each(function(i) {
-				var field = $(this);
-				console.log(this);
-				var newObject = {};
-				newObject['name'] = field.val();
-				newObject['hidden'] = field.parent().filter(":hidden").length == 1 ? true : false;
-				p.data.meetingAdjustors.push(newObject);
-				console.log(p.data);
-			});
+			p.data.meetingAdjustors = $(target).find('textarea').first().val();
 			return p;
 		}
 	},
@@ -435,7 +370,7 @@ var meetingPoints =  {
 
 			$("<span>").text("Öppnat klockan: ").appendTo(form);
 			$("<input>").val(p.data.meetingOpenTime).addClass("validatorField").addClass("meetingOpenTime").appendTo(form);
-			
+
 			return html;
 		},
 		validation: function(p) {
