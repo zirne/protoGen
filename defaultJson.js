@@ -406,18 +406,22 @@ var meetingPoints =  {
 		type: "vb",
 		title: "Verksamhetsberättelse för föregående år",
 		data: {
-			text: "Hej, vi hackar årsmötesprotokollsgenerator"
+			text: "Hej, vi hackar årsmötesprotokollsgenerator",
+			files: {}
 		},
+		fileController: (new FileController()),
 		html : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
 			$("<p>").text( p.data.text ).appendTo(html);
+			p.fileController.printHtml().appendTo(html);
 			return html;
 		},
 		form : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);
-			$("<textarea>").text(p.data.text).addClass("validatorField").appendTo(form);
+			var form = $('<form>').append($("<textarea>").text(p.data.text).addClass("validatorField")).appendTo(html);
+			p.fileController.printForm().appendTo(form);
 			return html;
 		},
 		validation: function(p) {
@@ -432,6 +436,7 @@ var meetingPoints =  {
 		},
 		save : function(p, target) {
 			p.data.text = $(target).find('textarea').first().val();
+			p.data.files = p.fileController.getList();
 			return p;
 		}
 	},
