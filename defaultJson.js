@@ -210,9 +210,7 @@ var meetingPoints =  {
 		type: "meetingAdjustor",
 		title: "Val av justerare",
 		data: {
-			meetingAdjustors: [{name: "Justerik Justerarsson", hidden : false},
-				{name: "Nån snubbe", hidden : false },
-				{name: null, hidden : true}]
+			meetingAdjustors: "En häst"
 		},
 		html : function(p) {
 			var html = $("<div>");
