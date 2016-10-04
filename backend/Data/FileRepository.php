@@ -13,7 +13,7 @@ class FileRepository
 		if ($file->id === null)
 		{
 			//write to new row in db
-			$query = "INSERT INTO tbl_attachments(name,type,data,meetingID,size,created,edited) VALUES(:name,:type,:data,:meetingID,:size,NOW(),NOW())";
+			$query = "INSERT INTO tbl_attachments(name,type,data,meetingID,size,created,edited,deleted) VALUES(:name,:type,:data,:meetingID,:size,NOW(),NOW(),0)";
 			$stmt = $this->db->prepare($query);
 			$stmt->bindParam(':name', $file->name, PDO::PARAM_INT);
 			$stmt->bindParam(':type', $file->type, PDO::PARAM_INT);
@@ -82,7 +82,7 @@ class FileRepository
 		}
 	}
 
-	public function loadAll(){
+	public function loadAllFiles(){
 		$query = "SELECT * FROM tbl_attachments";
 		$stmt = $this->db->prepare($query);
 		$stmt->execute();

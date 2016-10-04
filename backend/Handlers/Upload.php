@@ -32,11 +32,19 @@ class Upload{
       $file->size = $data['file']['size'];
       $file->meetingID = $postdata['meetingID'];
 
-      //print_r($file->data);
-
-      return $repo->upload($file);
-
       //Return file info using Download handler
+
+      $savedFile = $repo->upload($file);
+
+      $response->id = $savedFile->id;
+      $response->name = $savedFile->name;
+      $response->type = $savedFile->type;
+      $response->meetingID = $savedFile->meetingID;
+      $response->size = $savedFile->size;
+
+      return $response;
+
+
 
     } else {
       throw new Exception("Fel vid uppladdning: ");

@@ -18,5 +18,6 @@ CREATE TABLE IF NOT EXISTS `protogen`.`tbl_attachments` (
   `size` TEXT COLLATE utf8_swedish_ci NOT NULL,
   `created` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `edited` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `deleted` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_swedish_ci;
