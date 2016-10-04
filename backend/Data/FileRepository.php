@@ -7,18 +7,19 @@ class FileRepository
 		$this->db = $dbconnection;
 	}
 
-	public function save($file){
+	public function upload($file){
 
 		//Check if $id is set
-		if ($file->id===null)
+		if ($file->id === null)
 		{
 			//write to new row in db
-			$query = "INSERT INTO tbl_attachments(name,type,data,meetingID,created,edited) VALUES(:name,:type,:data,:meetingID,NOW(),NOW())";
+			$query = "INSERT INTO tbl_attachments(name,type,data,meetingID,size,created,edited) VALUES(:name,:type,:data,:meetingID,:size,NOW(),NOW())";
 			$stmt = $this->db->prepare($query);
 			$stmt->bindParam(':name', $file->name, PDO::PARAM_INT);
 			$stmt->bindParam(':type', $file->type, PDO::PARAM_INT);
-			$stmt->bindParam(':data', $file->data, PDO::PARAM_INT);
+			$stmt->bindParam(':data', $file->data, PDO::PARAM_LOB);
 			$stmt->bindParam(':meetingID', $file->meetingID, PDO::PARAM_INT);
+			$stmt->bindParam(':size', $file->size, PDO::PARAM_INT);
 
 			$stmt->execute();
 			if (!$stmt->rowCount())
@@ -26,7 +27,7 @@ class FileRepository
 				throw new Exception("No rows were updated");
 			}
 			$id = $this->db->lastInsertId();
-			return $this->load($id);
+			return $this->download($id);
 		}
 		else
 		{//update existing row
@@ -36,26 +37,27 @@ class FileRepository
 			}
 			else
 			{//actually update
-				$query = "UPDATE tbl_attachments SET name= :name, type = :type, data = :data, meetingID = :meetingID, edited = NOW()) WHERE id = :id";
+				$query = "UPDATE tbl_attachments SET name= :name, type = :type, data = :data, meetingID = :meetingID, size = :size, edited = NOW()) WHERE id = :id";
 				$stmt = $this->db->prepare($query);
 				$stmt->bindParam(':id', $file->id, PDO::PARAM_INT);
 				$stmt->bindParam(':name', $file->name, PDO::PARAM_INT);
 				$stmt->bindParam(':type', $file->type, PDO::PARAM_INT);
-				$stmt->bindParam(':data', $file->data, PDO::PARAM_INT);
+				$stmt->bindParam(':data', $file->data, PDO::PARAM_LOB);
 				$stmt->bindParam(':meetingID', $file->meetingID, PDO::PARAM_INT);
+				$stmt->bindParam(':size', $file->size, PDO::PARAM_INT);
 
 				$stmt->execute();
 				if (!$stmt->rowCount()){
 					throw new Exception("No rows were updated");
 				}
 				$id = $file->id;
-				$ordern =  $this->load($id);
+				$ordern =  $this->download($id);
 				return $ordern;
 			}
 		}
 	}
 
-	public function load($id){
+	public function download($id){
 		if (empty($id) OR $id === 0)
 		{
 			throw new Exception("invalid argument");
@@ -66,7 +68,6 @@ class FileRepository
 			$stmt = $this->db->prepare($query);
 			$stmt->bindParam(':theId', $id, PDO::PARAM_INT);
 			$stmt->execute();
-
 
 			if (!$stmt->rowCount())
 			{

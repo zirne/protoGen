@@ -5,6 +5,7 @@ class File {
 	public $type;
 	public $data;
 	public $meetingID;
+	public $size;
 	public $created;
 	public $edited;
 

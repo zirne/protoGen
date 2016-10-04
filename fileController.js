@@ -3,6 +3,7 @@ function FileController() {
 	var container = $('<div>');
 	var that = this;
 
+
 	this.getList = function() {
 		return this.fileList;
 	}
@@ -33,6 +34,8 @@ function FileController() {
 			$('<div>').text(fileList[i]['name']).appendTo(innerContainer);
 		}
 		var newUploadField = $('<input>').attr('type', 'file').attr('name', "file").appendTo(innerContainer);
+		$('<input>').attr("type", "hidden").attr("name", "meetingID").attr("value", "123").appendTo(innerContainer);//TA BORT HÅRDKODAD VALUE HÄR OCH ERSÄTT MED meetingID från JSON
+
 		$('<button>').on('click', function(ev) {
 			ev.preventDefault();
 			ev.stopPropagation();
@@ -61,6 +64,7 @@ function FileController() {
 					newFile['name'] = newUploadField.val();
 					fileList.push(newFile);
 					validatorField.trigger('change');
+
 					that.printForm();
 				},
 				error: function(e) {

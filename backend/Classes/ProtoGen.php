@@ -22,7 +22,7 @@ class ProtoGen {
 					break;
 
 				case 'upload';
-					$result =  (new Upload())->handle($_FILES);
+					$result = (new Upload())->handle($_FILES, $_POST);
 
 				default:
 					# code...
