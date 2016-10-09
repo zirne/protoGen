@@ -8,13 +8,14 @@ class Download{
 
 
 
+if($savedFile) {
 
+		header("Content-Type:" . $savedFile->type);
+		header("Content-Length:" . $savedFile->size);
+		header("Content-Disposition: attachment; filename=\"" . $savedFile->name . "\""); //http://www.media-division.com/the-right-way-to-handle-file-downloads-in-php/ (Tydligen är det så här man gör :P)
 
-		header("Content-Type:" . $savedFile['type']);
-		header("Content-Length:" . $savedFile['size']);
-		header("Content-Disposition: attachment; filename=\"$savedFile['name']\""); //http://www.media-division.com/the-right-way-to-handle-file-downloads-in-php/ (Tydligen är det så här man gör :P)
-
-		echo $savedFile['data'];
+		echo $savedFile->data;
+		exit;
 
 
 		//return $savedFile;

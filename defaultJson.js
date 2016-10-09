@@ -409,7 +409,7 @@ var meetingPoints =  {
 			text: "Hej, vi hackar årsmötesprotokollsgenerator",
 			files: {}
 		},
-		fileController: (new FileController()),
+		fileController: (new FileController(124)),
 		html : function(p) {
 			var html = $("<div>");
 			$("<h2>").text(p.title).appendTo(html);

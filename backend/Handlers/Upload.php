@@ -21,7 +21,7 @@ class Upload{
     }*/
 
 
-    if ($data['error'] == 0){
+    if (!isset($data['error'])){
       $file = new File();
       $file->name = $data['file']['name'];
       $file->type = $data['file']['type'];
@@ -36,11 +36,13 @@ class Upload{
 
       $savedFile = $repo->upload($file);
 
-      $response->id = $savedFile->id;
-      $response->name = $savedFile->name;
-      $response->type = $savedFile->type;
-      $response->meetingID = $savedFile->meetingID;
-      $response->size = $savedFile->size;
+      $response = [];
+
+      $response['id'] = $savedFile->id;
+      $response['name'] = $savedFile->name;
+      $response['type'] = $savedFile->type;
+      $response['meetingID'] = $savedFile->meetingID;
+      $response['size'] = $savedFile->size;
 
       return $response;
 

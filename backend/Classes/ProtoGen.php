@@ -23,9 +23,11 @@ class ProtoGen {
 
 				case 'upload';
 					$result = (new Upload())->handle($_FILES, $_POST);
+					break;
 
 				case 'download';
-					$result = (new Download())->handle($postdata);
+					$result = (new Download())->handle($_GET);
+					break;
 
 				default:
 					# code...

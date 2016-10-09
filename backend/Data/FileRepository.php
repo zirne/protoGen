@@ -31,7 +31,7 @@ class FileRepository
 		}
 		else
 		{//update existing row
-			if (empty($file->id) OR $file->id === 0)
+			if (empty($file->id))
 			{
 				throw new Exception("id must be an integer");
 			}
@@ -58,7 +58,7 @@ class FileRepository
 	}
 
 	public function download($id){
-		if (empty($id) OR $id === 0)
+		if (empty($id))
 		{
 			throw new Exception("invalid argument");
 		}

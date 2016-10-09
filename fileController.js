@@ -1,5 +1,6 @@
-function FileController() {
+function FileController(mid) {
 	var fileList = [];
+	var meetingid = mid;
 	var container = $('<div>');
 	var that = this;
 
@@ -9,11 +10,11 @@ function FileController() {
 	}
 
 	this.printHtml = function() {
-		var str = "";
+		var c = $('<div>');
 		for(var i in fileList) {
-			str += " " + fileList[i]['name'];
+			$('<a>').attr('href', 'backend/index.php?do=download&id=' + fileList[i]['id']).attr('target', '_blank').addClass('fileLink').text(fileList[i]['name']).appendTo(c);
 		}
-		return $('<div>').text(str);
+		return c;
 	};
 
 	this.printForm = function() {
@@ -29,12 +30,10 @@ function FileController() {
 			container.append(innerContainer);
 		}
 		innerContainer.empty();
+		this.printHtml().appendTo(innerContainer);
 
-		for(var i in fileList) {
-			$('<div>').text(fileList[i]['name']).appendTo(innerContainer);
-		}
 		var newUploadField = $('<input>').attr('type', 'file').attr('name', "file").appendTo(innerContainer);
-		$('<input>').attr("type", "hidden").attr("name", "meetingID").attr("value", "123").appendTo(innerContainer);//TA BORT HÅRDKODAD VALUE HÄR OCH ERSÄTT MED meetingID från JSON
+		$('<input>').attr("type", "hidden").attr("name", "meetingID").attr("value", this.meetingid).appendTo(innerContainer);
 
 		$('<button>').on('click', function(ev) {
 			ev.preventDefault();
@@ -57,19 +56,15 @@ function FileController() {
 					return myXhr;
 				},
 				beforeSend:  function() {},
-				success: function(e) {
-					console.log(e);
-					var newFile = {};
-					console.log(newUploadField.val());
-					newFile['name'] = newUploadField.val();
-					fileList.push(newFile);
+				success: function(res) {
+					fileList.push(res);
 					validatorField.trigger('change');
 
 					that.printForm();
 				},
 				error: function(e) {
 					console.log(e);
-					alert('Det gick ju åt helvete');
+					alert('Det gick ju inte lika bra som vi hoppats');
 				},
 				data: formData,
 				cache: false,
